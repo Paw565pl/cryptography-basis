@@ -1,5 +1,7 @@
 from sys import argv
 
+import cesar
+
 try:
     arg1 = argv[1]
     arg2 = argv[2]
@@ -20,7 +22,7 @@ def hi():
 
 
 args_to_function = {
-    "-c": {"-e": hi, "-d": hi, "-j": hi, "-k": hi},
+    "-c": {"-e": cesar.encrypt, "-d": cesar.decrypt, "-j": hi, "-k": hi},
     "-a": {"-e": hi, "-d": hi, "-j": hi, "-k": hi},
 }
 

@@ -20,7 +20,7 @@ def _decrypt_char(char: str, shift: int) -> str:
         return char
 
 
-def _get_key():
+def _get_key() -> int:
     with open("./data/key.txt", "r") as file:
         key = int(file.read().split(" ")[0])
 

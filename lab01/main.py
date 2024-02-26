@@ -1,5 +1,6 @@
 from sys import argv
 
+import affine
 import cesar
 
 try:
@@ -16,14 +17,19 @@ if arg1 not in first_arg_options or arg2 not in second_arg_options:
     print("invalid arguments")
     exit(1)
 
-
-def hi():
-    print("hi")
-
-
 args_to_function = {
-    "-c": {"-e": cesar.encrypt, "-d": cesar.decrypt, "-j": hi, "-k": hi},
-    "-a": {"-e": hi, "-d": hi, "-j": hi, "-k": hi},
+    "-c": {
+        "-e": cesar.encrypt,
+        "-d": cesar.decrypt,
+        "-j": cesar.find_key,
+        "-k": cesar.break_code,
+    },
+    "-a": {
+        "-e": affine.encrypt,
+        "-d": affine.decrypt,
+        "-j": affine.find_key,
+        "-k": affine.break_code,
+    },
 }
 
 args_to_function[arg1][arg2]()

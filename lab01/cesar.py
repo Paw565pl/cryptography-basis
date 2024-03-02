@@ -64,4 +64,16 @@ def find_key():
 
 
 def break_code():
-    pass
+    with open("./data/crypto.txt", "r") as file:
+        encrypted_text = file.read()
+
+    output = []
+
+    for key in range(0, 27):
+        decrypted_text = ""
+        for char in encrypted_text:
+            decrypted_text += _decrypt_char(char, key)
+        output.append(decrypted_text)
+
+    with open("./data/decrypt.txt", "w") as file:
+        file.write("\n".join(output))

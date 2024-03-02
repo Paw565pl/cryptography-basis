@@ -69,7 +69,7 @@ def break_code():
 
     output = []
 
-    for key in range(0, 27):
+    for key in range(1, 26):
         decrypted_text = ""
         for char in encrypted_text:
             decrypted_text += _decrypt_char(char, key)

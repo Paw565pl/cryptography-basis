@@ -21,12 +21,12 @@ def _decrypt_char(char: str, shift: int) -> str:
 
 
 def _get_key() -> int:
-    with open("./data/key.txt", "r") as file:
-        try:
+    try:
+        with open("./data/key.txt", "r") as file:
             key = int(file.read().split(" ")[0])
-        except ValueError:
-            print("invalid key")
-            exit(1)
+    except ValueError:
+        print("invalid key")
+        exit(1)
 
     if key < 0:
         print(f"invalid key: {key}")

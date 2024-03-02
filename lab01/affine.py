@@ -22,12 +22,16 @@ def _decrypt_char(char: str, multiplier: int, shift: int) -> str:
 
 
 def _get_key() -> tuple[int, int]:
-    with open("./data/key.txt", "r") as file:
-        content_list = file.read().split(" ")
+    try:
+        with open("./data/key.txt", "r") as file:
+            content_list = file.read().split(" ")
 
-    multiplier = int(content_list[0])
-    shift = int(content_list[1])
-    key = (multiplier, shift)
+        multiplier = int(content_list[0])
+        shift = int(content_list[1])
+        key = (multiplier, shift)
+    except ValueError:
+        print("invalid key")
+        exit(1)
 
     if multiplier < 0 or shift < 0:
         print(f"invalid key: {key}")

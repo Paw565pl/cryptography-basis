@@ -82,11 +82,10 @@ def find_key():
         first_two_chars_of_encrypted_text = encrypted_text[0:2]
         first_two_chars_of_helper_text = helper_text[0:2]
     except IndexError:
-        print("files are empty!")
+        print("files are empty or too short!")
         exit(1)
 
-    multiplier = None
-    shift = None
+    key = None
     for potential_multiplier in multiplier_values:
         for potential_shift in range(26):
             encrypted_first_two_chars_of_helper_text = ""
@@ -98,21 +97,19 @@ def find_key():
                 encrypted_first_two_chars_of_helper_text
                 == first_two_chars_of_encrypted_text
             ):
-                multiplier = potential_multiplier
-                shift = potential_shift
+                key = (potential_multiplier, potential_shift)
                 break
 
-    if multiplier is None or shift is None:
+    if key is None:
         print("unable to find key!")
         exit(1)
 
     with open("./data/key-new.txt", "w") as file:
-        key = (str(multiplier), str(shift))
-        file.write(" ".join(key))
+        file.write(f"{key[0]} {key[1]}")
 
     decrypted_text = ""
     for char in encrypted_text:
-        decrypted_text += _decrypt_char(char, multiplier, shift)
+        decrypted_text += _decrypt_char(char, key[0], key[1])
 
     with open("./data/decrypt.txt", "w") as file:
         file.write(decrypted_text)

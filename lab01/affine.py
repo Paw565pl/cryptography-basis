@@ -1,3 +1,6 @@
+multiplier_values = [1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]
+
+
 def _encrypt_char(char: str, multiplier: int, shift: int) -> str:
     char_code = ord(char)
 
@@ -69,7 +72,50 @@ def decrypt():
 
 
 def find_key():
-    pass
+    with open("./data/crypto.txt", "r") as file:
+        encrypted_text = file.read()
+
+    with open("./data/extra.txt", "r") as file:
+        helper_text = file.read()
+
+    try:
+        first_two_chars_of_encrypted_text = encrypted_text[0:2]
+        first_two_chars_of_helper_text = helper_text[0:2]
+    except IndexError:
+        print("files are empty!")
+        exit(1)
+
+    multiplier = None
+    shift = None
+    for potential_multiplier in multiplier_values:
+        for potential_shift in range(26):
+            encrypted_first_two_chars_of_helper_text = ""
+            for char in first_two_chars_of_helper_text:
+                encrypted_first_two_chars_of_helper_text += _encrypt_char(
+                    char, potential_multiplier, potential_shift
+                )
+            if (
+                encrypted_first_two_chars_of_helper_text
+                == first_two_chars_of_encrypted_text
+            ):
+                multiplier = potential_multiplier
+                shift = potential_shift
+                break
+
+    if multiplier is None or shift is None:
+        print("unable to find key!")
+        exit(1)
+
+    with open("./data/key-new.txt", "w") as file:
+        key = (str(multiplier), str(shift))
+        file.write(" ".join(key))
+
+    decrypted_text = ""
+    for char in encrypted_text:
+        decrypted_text += _decrypt_char(char, multiplier, shift)
+
+    with open("./data/decrypt.txt", "w") as file:
+        file.write(decrypted_text)
 
 
 def break_code():
@@ -77,8 +123,6 @@ def break_code():
         encrypted_text = file.read()
 
     output = []
-    multiplier_values = [1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]
-
     for multiplier in multiplier_values:
         for shift in range(26):
             decrypted_text = ""

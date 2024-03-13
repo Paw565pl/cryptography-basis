@@ -32,9 +32,6 @@ def _get_key() -> tuple[int, int]:
         multiplier = int(file_content[0])
         shift = int(file_content[1])
 
-    except FileNotFoundError:
-        print("key file not found")
-        exit(1)
     except ValueError:
         print("invalid key")
         exit(1)

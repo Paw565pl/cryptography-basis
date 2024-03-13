@@ -25,9 +25,6 @@ def _get_key() -> int:
         with open("./data/key.txt", "r") as file:
             key = int(file.read().strip().split(" ")[0])
 
-    except FileNotFoundError:
-        print("key file not found")
-        exit(1)
     except ValueError:
         print("invalid key")
         exit(1)

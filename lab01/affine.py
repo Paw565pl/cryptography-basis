@@ -25,15 +25,17 @@ def _decrypt_char(char: str, multiplier: int, shift: int) -> str:
 
 
 def _get_key() -> tuple[int, int]:
-    try:
-        with open("./data/key.txt", "r") as file:
-            file_content = file.read().strip().split()
+    with open("./data/key.txt", "r") as file:
+        file_content = file.read().strip().split()
 
+    try:
         multiplier = int(file_content[0])
         shift = int(file_content[1])
-
+    except IndexError:
+        print("invalid file format! should look like '5 5'")
+        exit(1)
     except ValueError:
-        print("invalid key")
+        print("invalid key!")
         exit(1)
 
     if multiplier not in multiplier_values or shift < 0:

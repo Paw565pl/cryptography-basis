@@ -25,6 +25,9 @@ def _get_key() -> int:
         with open("./data/key.txt", "r") as file:
             key = int(file.read().strip().split(" ")[0])
 
+    except IndexError:
+        print("invalid file format! should look like '5'")
+        exit(1)
     except ValueError:
         print("invalid key")
         exit(1)

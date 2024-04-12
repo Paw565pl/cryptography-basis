@@ -1,4 +1,4 @@
-from sys import argv
+from argparse import ArgumentParser
 
 LINE_LENGTH = 64
 
@@ -27,7 +27,7 @@ def prepare_text():
     with open("./data/orig.txt", "r") as file:
         text = file.read().replace("\n", " ").strip()
 
-    lines = [text[i: i + LINE_LENGTH] for i in range(0, len(text), LINE_LENGTH)]
+    lines = [text[i : i + LINE_LENGTH] for i in range(0, len(text), LINE_LENGTH)]
 
     with open("./data/plain.txt", "w") as file:
         file.write("\n".join(lines))
@@ -56,9 +56,9 @@ def cryptanalysis():
     for column_index in range(max_len):
         for row in text:
             if (
-                    column_index < len(row)
-                    and len(row[column_index]) > 1
-                    and row[column_index][1] == "1"
+                column_index < len(row)
+                and len(row[column_index]) > 1
+                and row[column_index][1] == "1"
             ):
                 reset_char = row[column_index]
                 for i in range(len(text)):
@@ -73,73 +73,32 @@ def cryptanalysis():
                             if decoded_char.isalpha() or decoded_char.isspace():
                                 text[i][column_index] = decoded_char
                             else:
-                                text[i][column_index] = "_"
+                                text[i][column_index] = " "
                         except ValueError:
                             text[i][column_index] = "_"
 
     with open("data/decrypt.txt", "w") as f:
         for row in text:
-            f.write("".join(row) + "\n")
+            f.write(("".join(row)).lower() + "\n")
 
 
-def krypto_analysis():
-    with open("data/crypto.txt", "r") as f:
-        text = f.read()
-        text = text.replace("\n", "*")
-        text = text.split("*")
-        text.pop(len(text) - 1)
+def main():
+    parser = ArgumentParser(description="one time pad cipher implementation")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-p", help="prepare text", action="store_true")
+    group.add_argument("-e", help="encrypt text", action="store_true")
+    group.add_argument("-k", help="cryptanalysis", action="store_true")
+    args = parser.parse_args()
 
-    for index, line in enumerate(text):
-        output = [line[i:i + 8] for i in range(0, len(line), 8)]
-        text[index] = output
+    if args.p:
+        prepare_text()
+    elif args.e:
+        encrypt()
+    elif args.k:
+        cryptanalysis()
 
-    for row_index, row in enumerate(text):
-        for column_index, column in enumerate(row):
-            reset_char = False
-            if len(column) > 1:
-                if column[1] == "1":
-                    reset_char = column
-                if reset_char:
-                    for i in range(len(text)):
-                        coded_char = text[i][column_index]
-                        coded_line = ""
-                        for j in range(8):
-                            result = int(coded_char[j]) ^ int(reset_char[j])
-                            if result:
-                                coded_line += "1"
-                            else:
-                                coded_line += "0"
-                        if coded_line == "00000000":
-                            text[i][column_index] = " "
-                        else:
-                            text[i][column_index] = chr(int(coded_line, 2))
-
-    with open("data/decrypt.txt", "w") as f:
-        for row in text:
-            for column in row:
-                f.write(column)
-            f.write("\n")
-    return True
+    print("done!")
 
 
-try:
-    arg = argv[1]
-except IndexError:
-    print("please provide argument")
-    exit(1)
-
-arg_options = ["-p", "-e", "-k"]
-
-if arg not in arg_options:
-    print("invalid argument")
-    exit(1)
-
-args_to_function = {
-    "-p": prepare_text,
-    "-e": encrypt,
-    "-k": krypto_analysis
-}
-
-args_to_function[arg]()
-print("done!")
-# TODO: fix cryptoanalysis
+if __name__ == "__main__":
+    main()

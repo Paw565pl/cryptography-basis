@@ -25,7 +25,7 @@ def fermat_test(n: int) -> None:
 
 
 def rabin_miller_test(
-        n: int, helper1: int | None = None, helper2: int | None = None
+    n: int, helper1: int | None = None, helper2: int | None = None
 ) -> None:
     with open(OUTPUT_FILE_PATH, "w") as output_file:
         if helper2:
